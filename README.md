@@ -1,6 +1,6 @@
 # Very initial try to solve a subset of ARC
 
-This is based on Few-shot Bayesian Imitation Learning with Policies as Logic over Programs and is a fork of the repo [https://github.com/tomsilver/policies_logic_programs](Tom Silver's code).
+This is based on Few-shot Bayesian Imitation Learning with Policies as Logic over Programs and is a fork of the repo [Tom Silver's code](https://github.com/tomsilver/policies_logic_programs).
 The setup right now only solves very few of the ARC problems, but maybe improvements in the DSL (`dsl.py`) might lead there.
 We only consider the 66% of games in the training set with same size in- and output. To address the rest I guess we need to change the setup a litte.
 
