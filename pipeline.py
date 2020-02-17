@@ -21,7 +21,6 @@ import numpy as np
 import time
 import os
 import matplotlib
-matplotlib.use('TkAgg')
 
 
 cache_dir = 'cache'
