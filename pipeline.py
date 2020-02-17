@@ -424,6 +424,7 @@ def test(policy, base_class_name, test_env_nums=range(11, 20), max_num_steps=50,
     return accuracies
 
 if __name__  == "__main__":
+    matplotlib.use('TkAgg')
     arc_tasks.load_data()
     overall_acc = []
     for task in arc_tasks.demonstrations_dict:
