@@ -15,12 +15,12 @@ def get_data_loader(directory='ARC-master/data/training', only_inout_equal=False
   for filename in os.listdir(directory):
     with open(os.path.join(directory,filename),'r') as f:
       task = json.load(f)
-
+      task_id = os.path.splitext(filename)[0]
 
       if not only_inout_equal or inout_equal(task):
         task = {'train': task['train'],
                 'test': task['test']}
-        yield task
+        yield task_id, task
 
 def inout_equal(task):
   return all(np.array(ex['input']).shape == np.array(ex['output']).shape for dataset in task.values() for ex in dataset)
@@ -38,13 +38,13 @@ def map_list_of_examples(loe):
 
 def get_task_demonstrations_loader(only_inout_equal,dir):
   tasks = get_data_loader(only_inout_equal=only_inout_equal,directory=dir)
-  for task in tasks:
-    yield task['train']
+  for task_id,task in tasks:
+    yield task_id,task['train']
 
 def get_task_test_loader(only_inout_equal,dir):
   tasks = get_data_loader(only_inout_equal=only_inout_equal,directory=dir)
-  for task in tasks:
-    yield task['test']
+  for task_id,task in tasks:
+    yield task_id,task['test']
 
 prefix = "ARCTask{}"
 
@@ -52,8 +52,8 @@ demonstrations_dict,tests_dict = None,None
 
 def load_data(only_inout_equal=True,dir='ARC-master/data/training'):
   global demonstrations_dict,tests_dict
-  demonstrations_dict = {prefix.format(i): d for i, d in enumerate(get_task_demonstrations_loader(only_inout_equal,dir))}
-  tests_dict = {prefix.format(i): d for i, d in enumerate(get_task_test_loader(only_inout_equal,dir))}
+  demonstrations_dict = {prefix.format(i): d for i, d in get_task_demonstrations_loader(only_inout_equal,dir)}
+  tests_dict = {prefix.format(i): d for i, d in get_task_test_loader(only_inout_equal,dir)}
 
 
 def demonstrations(name):
