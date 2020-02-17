@@ -36,19 +36,25 @@ def map_list_of_examples(loe):
 
   return [ex for exs in [ex_to_coordinate_exs(ex) for ex in loe] for ex in exs]
 
-def get_task_demonstrations_loader(only_inout_equal=True):
-  tasks = get_data_loader(only_inout_equal=only_inout_equal)
+def get_task_demonstrations_loader(only_inout_equal,dir):
+  tasks = get_data_loader(only_inout_equal=only_inout_equal,directory=dir)
   for task in tasks:
     yield task['train']
 
-def get_task_test_loader(only_inout_equal=True):
-  tasks = get_data_loader(only_inout_equal=only_inout_equal)
+def get_task_test_loader(only_inout_equal,dir):
+  tasks = get_data_loader(only_inout_equal=only_inout_equal,directory=dir)
   for task in tasks:
     yield task['test']
 
 prefix = "ARCTask{}"
-demonstrations_dict = {prefix.format(i):d for i,d in enumerate(get_task_demonstrations_loader())}
-tests_dict = {prefix.format(i):d for i,d in enumerate(get_task_test_loader())}
+
+demonstrations_dict,tests_dict = None,None
+
+def load_data(only_inout_equal=True,dir='ARC-master/data/training'):
+  global demonstrations_dict,tests_dict
+  demonstrations_dict = {prefix.format(i): d for i, d in enumerate(get_task_demonstrations_loader(only_inout_equal,dir))}
+  tests_dict = {prefix.format(i): d for i, d in enumerate(get_task_test_loader(only_inout_equal,dir))}
+
 
 def demonstrations(name):
   loe = demonstrations_dict[name]

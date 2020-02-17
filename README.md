@@ -12,6 +12,7 @@ We use Python 3.5.6 on macOS High Sierra. Other setups may work but have not bee
 Run
 ```
 git clone https://github.com/tomsilver/generalization_grid_games.git
+mv generalization_grid_games/generalization_grid_games .
 git clone https://github.com/fchollet/ARC.git
 pip install scikit-learn==0.20.3
 pip install imageio-ffmpeg
