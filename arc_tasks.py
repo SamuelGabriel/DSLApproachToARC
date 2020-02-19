@@ -40,7 +40,7 @@ def map_list_of_examples(loe,assume_inout_equal=False,return_input_shapes=False)
             range(output.shape[1])]
 
   if return_input_shapes:
-    return [ex for exs in [ex_to_coordinate_exs(ex) for ex in loe] for ex in exs], [np.array(ex['input']) for ex in loe]
+    return [ex for exs in [ex_to_coordinate_exs(ex) for ex in loe] for ex in exs], [np.array(ex['input']).shape for ex in loe]
 
   return [ex for exs in [ex_to_coordinate_exs(ex) for ex in loe] for ex in exs]
 
