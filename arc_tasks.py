@@ -25,7 +25,7 @@ def get_data_loader(directory='ARC-master/data/training', only_inout_equal=False
 def inout_equal(dataset):
   return all(np.array(ex['input']).shape == np.array(ex['output']).shape for ex in dataset)
 
-def map_list_of_examples(loe,assume_inout_equal=False):
+def map_list_of_examples(loe,assume_inout_equal=False,return_input_shapes=False):
   map_map = lambda m: np.array([[color_map[el] for el in line] for line in m], dtype=object)
 
   def ex_to_coordinate_exs(ex):
@@ -38,6 +38,9 @@ def map_list_of_examples(loe,assume_inout_equal=False):
     output = np.array(ex['output'], dtype=np.int)
     return [(input, (i, j, output[i][j])) for i in range(output.shape[0]) for j in
             range(output.shape[1])]
+
+  if return_input_shapes:
+    return [ex for exs in [ex_to_coordinate_exs(ex) for ex in loe] for ex in exs], [np.array(ex['input']) for ex in loe]
 
   return [ex for exs in [ex_to_coordinate_exs(ex) for ex in loe] for ex in exs]
 
@@ -67,4 +70,4 @@ def demonstrations(name):
 
 def tests(name, assume_inout_equal=True):
   loe = tests_dict[name]
-  return map_list_of_examples(loe,assume_inout_equal)
+  return map_list_of_examples(loe,assume_inout_equal,return_input_shapes=True)

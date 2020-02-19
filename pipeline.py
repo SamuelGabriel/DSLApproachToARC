@@ -407,7 +407,7 @@ def test(policy, base_class_name, test_env_nums=range(11, 20), max_num_steps=50,
          record_videos=True, video_format='mp4'):
 
     if arc_tasks.prefix.format('') in base_class_name:
-        test = arc_tasks.tests(base_class_name)
+        test, shapes = arc_tasks.tests(base_class_name)
         acc = sum(policy(obs, point[:2]) == point[2] for obs, point in test) / len(test)
         return acc
 
