@@ -17,21 +17,26 @@ def get_data_loader(directory='ARC-master/data/training', only_inout_equal=False
       task = json.load(f)
       task_id = os.path.splitext(filename)[0]
 
-      if not only_inout_equal or inout_equal(task):
+      if not only_inout_equal or inout_equal(task['train']):
         task = {'train': task['train'],
                 'test': task['test']}
         yield task_id, task
 
-def inout_equal(task):
-  return all(np.array(ex['input']).shape == np.array(ex['output']).shape for dataset in task.values() for ex in dataset)
+def inout_equal(dataset):
+  return all(np.array(ex['input']).shape == np.array(ex['output']).shape for ex in dataset)
 
-
-def map_list_of_examples(loe):
+def map_list_of_examples(loe,assume_inout_equal=False):
   map_map = lambda m: np.array([[color_map[el] for el in line] for line in m], dtype=object)
 
   def ex_to_coordinate_exs(ex):
+    input = map_map(ex['input'])
+    if 'output' not in ex:
+      if not assume_inout_equal:
+        raise ValueError("Unknown output dimensions, not supported so far.")
+      return [(input, (i, j, None)) for i in range(input.shape[0]) for j in
+            range(input.shape[1])]
     output = np.array(ex['output'], dtype=np.int)
-    return [(map_map(ex['input']), (i, j, output[i][j])) for i in range(output.shape[0]) for j in
+    return [(input, (i, j, output[i][j])) for i in range(output.shape[0]) for j in
             range(output.shape[1])]
 
   return [ex for exs in [ex_to_coordinate_exs(ex) for ex in loe] for ex in exs]
@@ -60,6 +65,6 @@ def demonstrations(name):
   loe = demonstrations_dict[name]
   return map_list_of_examples(loe)
 
-def tests(name):
+def tests(name, assume_inout_equal=True):
   loe = tests_dict[name]
-  return map_list_of_examples(loe)
+  return map_list_of_examples(loe,assume_inout_equal)
